@@ -1,0 +1,465 @@
+
+"nothing
+set tabstop=3
+set shiftwidth=3
+set expandtab
+set shiftround
+
+set showmatch
+
+set hls
+
+set incsearch
+set ignorecase
+syntax on
+set autoindent
+"set noautoindent
+set smartindent
+"recognise case when some letters are in uppercase
+set scs "smartcase
+set autowrite
+set autoread
+set number
+set statusline=%f\ -\ %{fugitive#statusline()}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+" BEGIN of Particular settings for special files
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+"autocmd BufRead Rulefile* 'noexpandtab'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+" END of Particular settings for special files
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+if version >= 600
+   syn keyword tclStatement        global return lindex
+   syn match   tclStatement        "proc" contained
+   syntax region tclFunc start="^\z(\s*\)proc.*{$" end="^\z1}$" transparent fold contains=ALL
+endif
+"setting persistent undo, for undo after reloading a file
+if version >= 730
+   set undodir=~/.vim/undodir
+   set undofile
+   set undolevels=1000 "maximum number of changes that can be undone
+   set undoreload=1000 "maximum number lines to save for undo on a buffer reload
+   setlocal cm=blowfish
+endif
+
+"enable folding auto saving
+
+au BufWritePost,BufLeave,WinLeave ?* mkview
+au BufReadPre ?* silent loadview
+if version >= 730
+   set foldmethod=indent
+   set foldnestmax=3
+endif
+
+   
+
+"enable c.vim plugin
+"enable snippets (snipmante)
+filetype plugin on
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"strong encryption
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" lets write some comments this is dumb
+"spelling english
+"set spell
+set spelllang=en_us
+
+if has("gui_running")
+    set background=dark
+    set t_Co=256
+    colorscheme elflord
+    "set mousehide
+    set mouse=a
+else
+    colorscheme elflord 
+    "set background=dark
+    set mousehide
+endif
+
+nnoremap <F2> :set invpaste paste?<CR>
+
+"codeReviewer plugin
+
+let g:CodeReviewer_reviewer="HHH"
+let g:CodeReviewer_reviewFile="hhh_review.rev"   " Set review file name
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" PERSONAL CUSTOMIZATIONS AKA MAPPINGS
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"merge from 3 files assuming we merge a change (do) from the second buffer
+"then do diffupdate
+nmap dm :diffg 2<CR>:diffupdate<CR>:w<CR>
+
+"edit vimrc
+nmap ,s :source $HOME/.vimrc<CR>
+nmap ,v :e $HOME/.vimrc<CR>
+nmap ,g :e $HOME/.gitconfig<CR>
+
+"edit .bashrc
+nmap ,b :e ~/.bashrc<CR>
+" mapping in normal mode \fn to insert the file with its relative path
+inoremap \fn <C-R>=expand("%:h") ."/" . expand("%:t")<CR>
+
+" this is to map the backspace in pnb machines
+"set t_kb =
+set backspace=indent,eol,start
+
+" map control-backspace to delete the previous word
+imap <C-BS> <C-W>
+
+"failed when there is a blank file
+map <F4> :cope<CR><C-W>j/\v(error #\d+:)<CR><CR>
+map <F5> :make<CR>:cope<CR><C-W>j/\v(error:\|undefined)<CR><CR>
+"map <F6> :cope<CR>/error<CR>
+map <F6> :make harness TEST=unit/pvl3<CR>:cope<CR><C-W>j/\v(error:\|undefined)<CR><CR>
+
+" Perl script
+map <F12> :!perl interface_splitter.pl func_tree.text func_list.text pvl3 >out.text 2>err.text
+
+"change the scroll block setting for either lock two window contents
+" and compare 
+map <C-L> :set scb!<CR><C-W>W:set scb!<CR><C-W>W
+"mapping find line in next window
+
+"map ff ^v$hy<C-wr/<C-r>"<CR>
+" match a complete line and attempt to find it in another window
+"useful for finding where a diff text belongs in a third branched modification of a file
+"map <C-f>l ^v$hy<C-w>w/\V\c<C-r>"<CR>
+"not necessary as ctrl w ctrl w does the same, besides wn makes word command slower as has to wait for the n
+"map wn <C-w>w
+
+"open a new window and split vertically
+map <C-W>n :vnew<CR>
+"map <C-W> to delete back 1 word
+imap <C-BS> <C-W>
+"
+"PERSONAL ABBREVIATIONS
+ab #i #include
+
+" delete wrong pasted text from another vim instance
+map -d 02dwj
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"DIFF SETTINGS
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+set diffopt+=iwhite
+
+
+"create comment box using boxes tool
+
+"C syntax
+vmap ,mc !boxes -d cc<CR>
+nmap ,mc !!boxes -d cc<CR>
+"Shell syntax
+vmap ,ms !boxes -d shell<CR>
+nmap ,ms !!boxes -d shell<CR>
+
+"delete the comment box
+
+"C syntax
+vmap ,xc !boxes -d cc -r<CR>  
+nmap ,xc !!boxes -d cc -r<CR>
+"Shell syntax
+vmap ,xs !boxes -d shell -r<CR>
+nmap ,xs !!boxes -d shell -r<CR>
+
+
+"Mapping cscope shortcuts
+
+"on mintty looks like <C-space> is automatically mapped to <ctrl-@>
+if has("win32unix")
+    nmap <C-@> <C-Space>
+    imap <C-@> <C-Space>
+endif
+
+"autocommand for making and loading views automatically
+"au BufWinLeave ?* mkview
+"au BufWinEnter ?* silent loadview
+
+" ---------------------------------------
+"function! s:vimim_ctrl_space_mapping_on()
+" ---------------------------------------
+"    if s:vimim_ctrl_space_to_toggle > 0
+"        if has("gui_running")
+"            nmap <C-Space> <C-Bslash>
+"            imap <C-Space> <C-Bslash>
+"        elseif has("win32unix")
+"            nmap <C-@> <C-Bslash>
+"            imap <C-@> <C-Bslash>
+"        endif
+"    endif
+"endfunction 
+"if has("gui_running")
+"    nmap <C-Space> <C-Bslash>
+"    imap <C-Space> <C-Bslash>
+"elseif has("win32unix")
+"    nmap <C-@> <C-Bslash>
+"    imap <C-@> <C-Bslash>
+"endif
+
+"oher that dont work with cygwin
+
+nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+" Using 'CTRL-spacebar' then a search type makes the vim window
+" split horizontally, with search result displayed in
+" the new window.
+
+nmap <C-\><C-\><C-\>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\><C-\>g :scs find g <C-R>=expand("<cword>")<CR><CR><C-W>R
+nmap <C-\><C-\><C-\>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\><C-\>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\><C-\>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\><C-\>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\><C-\><C-\>i :scs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\><C-\><C-\>d :scs find d <C-R>=expand("<cword>")<CR><CR>
+
+" Hitting CTRL-space *twice* before the search type does a vertical
+" split instead of a horizontal one
+"
+nmap <C-\><C-\>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\><C-\>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\><C-\>i :vert scs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\><C-\>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+
+
+"trying to enable use of cscope
+"let &cscopeprg ='c:/cygwin/usr/local/bin/cscope'
+
+"let s:_ostype=""
+"set s:_ostype=exec echo $OSTYPE
+"if s:_ostype == ""
+"   set s:_ostype=$OS_TYPE
+"endif
+"
+""unfortunately env var names are not standard
+""Roseville VMS with Red Hat
+"if s:_ostype == "Linux"
+"   set csprg=glob(which cscope)
+""Local machine with Cygwin
+"elseif s:_ostype == "CYGWIN"
+"   set csprg=glob(which mlcsope)
+"else 
+"   set s:_ostype = "unknown"
+"endif
+
+"if has("cscope") && s:_ostype != "unknown"
+if has("cscope") 
+    "This was a custom installed version of cscope in cygwin
+    "set csprg=/usr/local/bin/cscope
+    "This was a little hack to adapt mlcsope to cygwin
+    "
+    "set csprg=glob(which cscope)
+    set csprg=/usr/bin/cscope
+    set csto=0
+    set cst
+    set nocsverb
+    
+    if filereadable ("cscope.out") 
+        "cscope -C (queries this with case insensitivity) 
+        "exec 'cs add -P '.expand('%:p:h').'\cscope.out'
+        cs add cscope.out . -C
+        " else add database pointed to by environment 
+    elseif filereadable("code/cscope.out")
+    elseif $CSCOPE_DB != "" 
+        cs add $CSCOPE_DB code/
+    endif 
+    set csverb
+endif
+
+"ctags enabled
+if filereadable ("tags")
+   set tags=tags
+endif
+
+
+" load the CCTREE based on cscope.out db if available
+"autocmd VimEnter * 
+"if filereadable('cscope.out') 
+"   CCTreeLoadDB cscope.out 
+"endif
+
+"settings for cflow
+"au BufNewFile,BufRead *.cflow setf cflow
+
+"Run CFlow to generate a tree for .c files
+
+"com! Cflow :!cflow --format=gnu --main=anamewithnosense ./*/*.c --output=func_tree.txt | :vs func_tree.txt
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"enabling windows clipboard on cygwin
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+function! Putclip(type, ...) range
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
+    if a:type == 'n'
+    silent exe a:firstline . "," . a:lastline . "y"
+    elseif a:type == 'c'
+    silent exe a:1 . "," . a:2 . "y"
+    else
+    silent exe "normal! `<" . a:type . "`>y"
+    endif
+    call system('putclip', @@)
+    let &selection = sel_save
+    let @@ = reg_save
+endfunction
+
+function! Getclip()
+    let reg_save = @@
+    let @@ = system('getclip')
+    setlocal paste
+    exe 'normal p'
+    setlocal nopaste
+    let @@ = reg_save
+endfunction
+
+" use \y and \p to yank and paste using the windows clipboard from cygwin
+
+vnoremap <silent> <leader>y :call Putclip(visualmode(), 1)<CR>
+nnoremap <silent> <leader>y :call Putclip('n', 1)<CR>
+
+nnoremap <silent> <leader>p :call Getclip()<CR>
+
+
+
+" automatically open stored sessions in a directory
+" looks for a Session file if not, nothing happens
+
+"function! RestoreSession()
+"    if argc() == 0 && -e Session.vim "vim called without arguments
+"        execute 'source Session.vim'
+"    end
+"endfunction
+"autocmd VimEnter * call RestoreSession()
+
+" ex command for toggling hex mode - define mapping if desired
+ command -bar Hexmode call ToggleHex()
+
+" open files in hex mode
+" http://vim.wikia.com/wiki/VimTip1518
+"
+nnoremap <C-H> :Hexmode<CR>
+inoremap <C-H> <Esc>:Hexmode<CR>
+vnoremap <C-H> :<C-U>Hexmode<CR>
+
+" helper function to toggle hex mode
+function ToggleHex()
+  " hex mode should be considered a read-only operation
+  " save values for modified and read-only for restoration later,
+  " and clear the read-only flag for now
+  let l:modified=&mod
+  let l:oldreadonly=&readonly
+  let &readonly=0
+  let l:oldmodifiable=&modifiable
+  let &modifiable=1
+  if !exists("b:editHex") || !b:editHex
+    " save old options
+    let b:oldft=&ft
+    let b:oldbin=&bin
+    " set new options
+    setlocal binary " make sure it overrides any textwidth, etc.
+    let &ft="xxd"
+    " set status
+    let b:editHex=1
+    " switch to hex editor
+    %!xxd
+  else
+    " restore old options
+    let &ft=b:oldft
+    if !b:oldbin
+      setlocal nobinary
+    endif
+    " set status
+    let b:editHex=0
+    " return to normal editing
+    %!xxd -r
+  endif
+  " restore values for modified and read only state
+  let &mod=l:modified
+  let &readonly=l:oldreadonly
+  let &modifiable=l:oldmodifiable
+endfunction
+
+
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre  *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd
+  au BufReadPost *.bin set ft=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd
+  au BufWritePost *.bin set nomod | endif
+augroup END
+
+
+" autocmds to automatically enter hex mode and handle file writes properly
+if has("autocmd")
+  " vim -b : edit binary using xxd-format!
+  augroup Binary
+    au!
+
+    " set binary option for all binary files before reading them
+    au BufReadPre *.bin,*.pcap setlocal binary
+
+    " if on a fresh read the buffer variable is already set, it's wrong
+    au BufReadPost *
+          \ if exists('b:editHex') && b:editHex |
+          \   let b:editHex = 0 |
+          \ endif
+
+    " convert to hex on startup for binary files automatically
+    au BufReadPost *
+          \ if &binary | Hexmode | endif
+
+    " When the text is freed, the next time the buffer is made active it will
+    " re-read the text and thus not match the correct mode, we will need to
+    " convert it again if the buffer is again loaded.
+    au BufUnload *
+          \ if getbufvar(expand("<afile>"), 'editHex') == 1 |
+          \   call setbufvar(expand("<afile>"), 'editHex', 0) |
+          \ endif
+
+    " before writing a file when editing in hex mode, convert back to non-hex
+    au BufWritePre *
+          \ if exists("b:editHex") && b:editHex && &binary |
+          \  let oldro=&ro | let &ro=0 |
+          \  let oldma=&ma | let &ma=1 |
+          \  silent exe "%!xxd -r" |
+          \  let &ma=oldma | let &ro=oldro |
+          \  unlet oldma | unlet oldro |
+          \ endif
+
+    " after writing a binary file, if we're in hex mode, restore hex mode
+    au BufWritePost *
+          \ if exists("b:editHex") && b:editHex && &binary |
+          \  let oldro=&ro | let &ro=0 |
+          \  let oldma=&ma | let &ma=1 |
+          \  silent exe "%!xxd" |
+          \  exe "set nomod" |
+          \  let &ma=oldma | let &ro=oldro |
+          \  unlet oldma | unlet oldro |
+          \ endif
+  augroup END
+endif
