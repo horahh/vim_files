@@ -1,3 +1,9 @@
 [submodule "bundle/fugitive"]
 	path = bundle/fugitive
 	url = http://github.com/tpope/vim-fugitive.git
+[submodule "bundle/pathogen"]
+	path = bundle/pathogen
+	url = http://github.com/tpope/vim-pathogen.git
+[submodule "bundle/LaTeX-Suite-aka-Vim-LaTeX"]
+	path = bundle/LaTeX-Suite-aka-Vim-LaTeX
+	url = https://github.com/vim-scripts/LaTeX-Suite-aka-Vim-LaTeX

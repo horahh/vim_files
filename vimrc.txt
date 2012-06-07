@@ -3,7 +3,12 @@
 set tabstop=3
 set shiftwidth=3
 set expandtab
-set shiftround
+set shiftround  "round > and < cmds final indent to a valid one
+set pastetoggle=<F2>
+"set noremap ; :
+"set noremap j gj " go to next row in editor instead of next line
+"set noremap k gk " go to next row in editor instead of next line
+
 
 set showmatch
 
@@ -15,12 +20,44 @@ syntax on
 set autoindent
 "set noautoindent
 set smartindent
-"recognise case when some letters are in uppercase
-set scs "smartcase
+set scs "recognise case when some letters are in uppercase
 set autowrite
 set autoread
 set number
+set hidden " hide buffers instead of writing/undo changes
+
+set history=1000
+set undolevels=1000
+set title
+set visualbell     "dont beep
+set noerrorbells
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" PLUGINS
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" pathogen config
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"set verbose=1 " to see if there are problems loading plugins
+runtime bundle/pathogen/autoload/pathogen.vim
+call pathogen#infect()
+call pathogen#helptags()
+call pathogen#runtime_append_all_bundles()
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" fugitive config (statusbar on git repos)
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
 set statusline=%f\ -\ %{fugitive#statusline()}
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Latex plugin
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:tex_flavor = "latex" " Set LaTeX as te default TeX type
+filetype plugin on
 
 """""""""""""""""""""""""""""""""""""""""""""""""""
 " BEGIN of Particular settings for special files
@@ -46,8 +83,8 @@ endif
 
 "enable folding auto saving
 
-au BufWritePost,BufLeave,WinLeave ?* mkview
-au BufReadPre ?* silent loadview
+"au BufWritePost,BufLeave,WinLeave ?* mkview
+"au BufReadPre ?* silent loadview
 if version >= 730
    set foldmethod=indent
    set foldnestmax=3
