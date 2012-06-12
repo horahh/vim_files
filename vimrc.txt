@@ -119,6 +119,7 @@ else
 endif
 
 nnoremap <F2> :set invpaste paste?<CR>
+nnoremap <F12> :cs add code/cscope.out code/<CR>
 
 "codeReviewer plugin
 
@@ -157,7 +158,7 @@ map <F5> :make<CR>:cope<CR><C-W>j/\v(error:\|undefined)<CR><CR>
 map <F6> :make harness TEST=unit/pvl3<CR>:cope<CR><C-W>j/\v(error:\|undefined)<CR><CR>
 
 " Perl script
-map <F12> :!perl interface_splitter.pl func_tree.text func_list.text pvl3 >out.text 2>err.text
+"map <F12> :!perl interface_splitter.pl func_tree.text func_list.text pvl3 >out.text 2>err.text
 
 "change the scroll block setting for either lock two window contents
 " and compare 
