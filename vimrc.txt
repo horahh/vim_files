@@ -119,7 +119,7 @@ else
 endif
 
 nnoremap <F2> :set invpaste paste?<CR>
-nnoremap <F12> :cs add code/cscope.out code/<CR>
+nnoremap <F12> :cs add code/cscope.out code -C<CR>
 
 "codeReviewer plugin
 
@@ -319,9 +319,11 @@ if has("cscope")
         cs add cscope.out . -C
         " else add database pointed to by environment 
     elseif filereadable("code/cscope.out")
-        cs add code/cscope.out code/
+        " code/ is the path to prepend to the cscope paths
+        " -C flag is to be case insensitive
+        cs add code/cscope.out code -C
     elseif $CSCOPE_DB != "" 
-        cs add $CSCOPE_DB code/
+        cs add $CSCOPE_DB code
     endif 
     set csverb
 endif
