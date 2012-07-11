@@ -120,7 +120,7 @@ else
 endif
 
 nnoremap <F2> :set invpaste paste?<CR>
-nnoremap <F12> :cs add code/cscope.out code/<CR>
+nnoremap <F12> :cs add code/cscope.out code -C<CR>
 
 "codeReviewer plugin
 
@@ -210,7 +210,6 @@ vmap ,xs !boxes -d shell -r<CR>
 nmap ,xs !!boxes -d shell -r<CR>
 
 
-"Mapping cscope shortcuts
 
 "on mintty looks like <C-space> is automatically mapped to <ctrl-@>
 if has("win32unix")
@@ -245,6 +244,9 @@ endif
 
 "oher that dont work with cygwin
 
+""""""""""""""""""""""""""""""""""""""""""""""""""
+"Mapping cscope shortcuts
+""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
@@ -318,8 +320,11 @@ if has("cscope")
         cs add cscope.out . -C
         " else add database pointed to by environment 
     elseif filereadable("code/cscope.out")
+        " code/ is the path to prepend to the cscope paths
+        " -C flag is to be case insensitive
+        cs add code/cscope.out code -C
     elseif $CSCOPE_DB != "" 
-        cs add $CSCOPE_DB code/
+        cs add $CSCOPE_DB code
     endif 
     set csverb
 endif
@@ -378,6 +383,9 @@ vnoremap <silent> <leader>y :call Putclip(visualmode(), 1)<CR>
 nnoremap <silent> <leader>y :call Putclip('n', 1)<CR>
 
 nnoremap <silent> <leader>p :call Getclip()<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" End of Cygwin copy/paste
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 
@@ -440,7 +448,10 @@ function ToggleHex()
 endfunction
 
 
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open/view/edit binary files making them look like hex
 " vim -b : edit binary using xxd-format!
+""""""""""""""""""""""""""""""""""""""""""""""""""
 augroup Binary
   au!
   au BufReadPre  *.bin let &bin=1
@@ -502,3 +513,6 @@ if has("autocmd")
           \ endif
   augroup END
 endif
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" End of binary files editing
+""""""""""""""""""""""""""""""""""""""""""""""""""
