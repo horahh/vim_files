@@ -36,6 +36,14 @@ set noerrorbells
 " PLUGINS
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" syntastic config
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" enable check on open
+let g:syntastic_check_on_open=1
+" enable highligh of errors
+let g:syntastic_enable_highlighting=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " pathogen config
